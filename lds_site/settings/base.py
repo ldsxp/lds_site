@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 因为我们把设置放在了目录中
+BASE_DIR = os.path.dirname(PROJECT_APP_PATH)
 
+sys.path.insert(0, os.path.join(BASE_DIR, 'lib'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
+print('BASE_DIR：', BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -25,7 +31,7 @@ SECRET_KEY = 'zqo)#!947n02%q_zc$-0emy^np0_2b1d@_d1u@y(p)$8-96sld'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django.contrib.humanize',  # 添加人性化过滤器
+    # 'django.contrib.sitemaps',  # 网站地图
 ]
 
 MIDDLEWARE = [
@@ -104,18 +112,30 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'  # 语言
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'  # 时区
 
-USE_I18N = True
+USE_I18N = True  # 语言
 
-USE_L10N = True
+USE_L10N = True  # 数据和时间格式
 
-USE_TZ = True
+USE_TZ = True  # 启用时区
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 使用 collectstatic 命令收集静态文件时，存放 static 文件的路径
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # .replace('\\', '/')
+
+STATICFILES_DIRS = (
+    # 默认Django会在每个app下的static/app查找静态文件
+    # 如果加额外的路径寻找则在STATICFILES_DIR中设置（设置这个，因为项目共用bootstrap）
+    os.path.join(BASE_DIR, "static"),
+)
