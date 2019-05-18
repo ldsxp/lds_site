@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.humanize',  # 添加人性化过滤器
     # 'django.contrib.sitemaps',  # 网站地图
+    # 应用程序
+    'blog',
+    'config',
+    'comment',
 ]
 
 MIDDLEWARE = [
