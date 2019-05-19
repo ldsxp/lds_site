@@ -11,5 +11,8 @@ class Comment(models.Model):
     email = models.EmailField(verbose_name="邮箱")
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 
+    def __str__(self):
+        return self.nickname
+
     class Meta:
         verbose_name = verbose_name_plural = "评论"

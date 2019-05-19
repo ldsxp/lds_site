@@ -12,10 +12,13 @@ class Link(models.Model):
     status = models.PositiveIntegerField(default=1, choices=STATUS_ITEMS, verbose_name="状态")
     weight = models.PositiveIntegerField(default=1, choices=zip(range(1, 6), range(1, 6)),
                                          verbose_name="权重",
-                                         help_text="权重越高展示顺序约靠前")
+                                         help_text="权重高展示顺序靠前")
 
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.DO_NOTHING)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = verbose_name_plural = "友链"
@@ -40,6 +43,9 @@ class SideBar(models.Model):
 
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.DO_NOTHING)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = verbose_name_plural = "侧边栏"
