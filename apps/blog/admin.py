@@ -5,6 +5,28 @@ from django.utils.html import format_html
 from .models import Post, Category, Tag
 
 
+class CategoryOwnerFilter(admin.SimpleListFilter):
+    """ 自定义过滤器只展示当前用户分类 """
+
+    title = '分类过滤器'
+    parameter_name = 'owner_category'
+
+    def lookups(self, request, model_admin):
+        """返回要展示的内容和查询用的id"""
+        return Category.objects.filter(owner=request.user).values_list('id', 'name')
+
+    def queryset(self, request, queryset):
+        """
+        根据 URL Query 的内容返回列表页数据，
+        比如如果 URL 最后的 Query 是 ?parameter_name=1，那么这里的 self.value() 就是 1，根据1来过滤，
+        返回已过滤的查询集。
+        """
+        category_id = self.value()
+        if category_id:
+            return queryset.filter(category_id=category_id)
+        return queryset
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = [
@@ -13,7 +35,7 @@ class PostAdmin(admin.ModelAdmin):
     ]
     list_display_links = []
 
-    list_filter = ['category', 'owner']
+    list_filter = ['category', 'owner', CategoryOwnerFilter, ]
     search_fields = ['title', 'category__name', 'owner__username']
     show_full_result_count = True
 
@@ -43,6 +65,11 @@ class PostAdmin(admin.ModelAdmin):
         )
 
     operator.short_description = '操作'
+
+    def get_queryset(self, request):
+        qs = super(PostAdmin, self).get_queryset(request)
+        # 让当前用户只能看到自己的文章
+        return qs.filter(owner=request.user)
 
 
 @admin.register(Category)
