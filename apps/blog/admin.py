@@ -47,16 +47,31 @@ class PostAdmin(admin.ModelAdmin):
     # 编辑页面
     save_on_top = True
 
-    fieldsets = (  # 跟fields互斥
+    fieldsets = (
         ('基础配置', {
-            'fields': (('category', 'title'), 'content')
+            'description': '基础配置描述',
+            'fields': (
+                ('title', 'category'),
+                'status',
+            ),
         }),
-        ('高级配置', {
+        ('内容', {
+            'fields': (
+                'desc',
+                'content',
+            ),
+        }),
+        ('额外信息', {
+            'classes': ('wide',),
             'fields': ('tags',),
-        }),
+        })
     )
 
+    # 横向展示
     filter_horizontal = ('tags',)
+
+    # 纵向展示
+    # filter_vertical = ('tags',)
 
     def operator(self, obj):
         return format_html(
