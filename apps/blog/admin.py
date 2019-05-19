@@ -86,6 +86,12 @@ class PostAdmin(admin.ModelAdmin):
         # 让当前用户只能看到自己的文章
         return qs.filter(owner=request.user)
 
+    class Media:
+        css = {
+            'all': ("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css",),
+        }
+        js = ('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',)
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
