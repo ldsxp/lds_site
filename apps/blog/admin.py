@@ -6,6 +6,12 @@ from .models import Post, Category, Tag
 from .adminforms import PostAdminForm
 
 
+class PostInline(admin.TabularInline):  # StackedInline  样式不同
+    fields = ('title', 'desc')
+    extra = 1  # 控制额外多几个
+    model = Post
+
+
 class CategoryOwnerFilter(admin.SimpleListFilter):
     """ 自定义过滤器只展示当前用户分类 """
 
@@ -97,7 +103,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    inlines = [PostInline, ]
 
     list_display = [
         'name',
