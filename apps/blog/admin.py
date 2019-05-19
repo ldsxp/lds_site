@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -118,3 +119,8 @@ class CategoryAdmin(BaseOwnerAdmin):
 @admin.register(Tag, site=custom_site)
 class TagAdmin(BaseOwnerAdmin):
     pass
+
+
+@admin.register(LogEntry, site=custom_site)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = ['object_repr', 'object_id', 'action_flag', 'user', 'change_message']
