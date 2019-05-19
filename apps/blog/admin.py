@@ -5,6 +5,7 @@ from django.utils.html import format_html
 from .models import Post, Category, Tag
 from .adminforms import PostAdminForm
 from lds_site.custom_site import custom_site
+from lds_site.base_admin import BaseOwnerAdmin
 
 
 class PostInline(admin.TabularInline):  # StackedInline  样式不同
@@ -36,7 +37,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 
 @admin.register(Post, site=custom_site)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(BaseOwnerAdmin):
     form = PostAdminForm
     list_display = [
         'title', 'category', 'status_show', 'owner',
@@ -90,11 +91,6 @@ class PostAdmin(admin.ModelAdmin):
 
     operator.short_description = '操作'
 
-    def get_queryset(self, request):
-        qs = super(PostAdmin, self).get_queryset(request)
-        # 让当前用户只能看到自己的文章
-        return qs.filter(owner=request.user)
-
     class Media:
         css = {
             'all': ("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css",),
@@ -103,7 +99,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 @admin.register(Category, site=custom_site)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(BaseOwnerAdmin):
     inlines = [PostInline, ]
 
     list_display = [
@@ -120,5 +116,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Tag, site=custom_site)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseOwnerAdmin):
     pass
