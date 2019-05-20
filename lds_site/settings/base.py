@@ -63,7 +63,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'lds_site.urls'
 
-THEME = 'default'
+THEME = 'bootstrap'
 
 TEMPLATES = [
     {
