@@ -64,7 +64,7 @@ class Post(models.Model):
 
     @classmethod
     def hot_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL).ordery_by('-pv')
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
 
 
 class Category(models.Model):
