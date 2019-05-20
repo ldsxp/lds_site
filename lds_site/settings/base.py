@@ -63,10 +63,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'lds_site.urls'
 
+THEME = 'default'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates/themes', THEME)]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
