@@ -11,32 +11,14 @@ class CommonViewMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'sidebars': self.get_sidebars(),
+            'sidebars': SideBar.get_all(),
         })
-        context.update(self.get_navs())
+        context.update(Category.get_navs())
         return context
-
-    def get_sidebars(self):
-        return SideBar.objects.filter(status=SideBar.STATUS_SHOW)
-
-    def get_navs(self):
-        categories = Category.objects.filter(status=Category.STATUS_NORMAL)
-        nav_categories = []
-        normal_categories = []
-        for cate in categories:
-            if cate.is_nav:
-                nav_categories.append(cate)
-            else:
-                normal_categories.append(cate)
-
-        return {
-            'navs': nav_categories,
-            'categories': normal_categories,
-        }
 
 
 class IndexView(CommonViewMixin, ListView):
-    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
+    queryset = Post.latest_posts()
     # 每页的数据数量
     paginate_by = 1
     context_object_name = 'post_list'
@@ -80,7 +62,7 @@ class TagView(IndexView):
 class PostDetailView(CommonViewMixin, DetailView):
     # model 属性 指定当前 View 要使用的 Model
     # 或者 queryset 属性设定过滤过的数据集
-    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
+    queryset = Post.latest_posts()
     # 模版名称
     template_name = 'blog/detail.html'
     # 渲染到模版中的 queryset 名字，默认是 obj._meta.model_name

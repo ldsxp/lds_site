@@ -59,8 +59,11 @@ class Post(models.Model):
         return post_list, category
 
     @classmethod
-    def latest_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL)
+    def latest_posts(cls, with_related=True):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+        if with_related:
+            queryset = queryset.select_related('owner', 'category')
+        return queryset
 
     @classmethod
     def hot_posts(cls):
@@ -86,6 +89,22 @@ class Category(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '分类'
+
+    @classmethod
+    def get_navs(cls):
+        categories = cls.objects.filter(status=cls.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        for cate in categories:
+            if cate.is_nav:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+
+        return {
+            'navs': nav_categories,
+            'categories': normal_categories,
+        }
 
 
 class Tag(models.Model):
