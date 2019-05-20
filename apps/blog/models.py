@@ -33,6 +33,12 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        # 处理通过 inline model 保存的逻辑
+        if self.owner_id is None and self.category.owner_id:
+            self.owner_id = self.category.owner_id
+        return super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = verbose_name_plural = "文章"
 
