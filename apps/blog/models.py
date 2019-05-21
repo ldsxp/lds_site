@@ -1,3 +1,5 @@
+import mistune
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -17,6 +19,7 @@ class Post(models.Model):
     tags = models.ManyToManyField('Tag', verbose_name="标签")
 
     content = models.TextField(verbose_name="内容", help_text="注：目前仅支持Markdown格式数据")
+    content_html = models.TextField(verbose_name="正文html代码", blank=True, editable=False)
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name="状态")
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.DO_NOTHING)
 
@@ -37,10 +40,14 @@ class Post(models.Model):
         # 处理通过 inline model 保存的逻辑
         if self.owner_id is None and self.category.owner_id:
             self.owner_id = self.category.owner_id
+
+        self.content_html = mistune.markdown(self.content)
+
         return super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = verbose_name_plural = "文章"
+        ordering = ['-id']
 
     @staticmethod
     def get_by_tag(tag_id):
