@@ -1,5 +1,6 @@
 import mistune
 
+from django.utils.functional import cached_property
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -48,6 +49,11 @@ class Post(models.Model):
     class Meta:
         verbose_name = verbose_name_plural = "文章"
         ordering = ['-id']
+
+    # 转换为缓存在实例上的属性
+    @cached_property
+    def get_tags(self):
+        return ','.join(self.tags.values_list('name', flat=True))
 
     @staticmethod
     def get_by_tag(tag_id):
