@@ -145,3 +145,4 @@ class Tag(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '标签'
+        ordering = ['-id']
