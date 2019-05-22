@@ -28,7 +28,6 @@ from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 from config.views import LinkListView
 from comment.views import CommentView
-from .custom_site import custom_site
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
