@@ -80,7 +80,7 @@ class PostAdmin(BaseOwnerAdmin):
             '基础信息',
             Row("title", "category"),
             'status',
-            'tag',
+            'tags',
         ),
         Fieldset(
             '内容信息',

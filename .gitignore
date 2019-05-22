@@ -136,3 +136,4 @@ ENV/
 
 # My configurations:
 /.idea/*
+/media/*
