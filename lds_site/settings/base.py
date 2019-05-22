@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'django.contrib.humanize',  # 添加人性化过滤器
     # 'django.contrib.sitemaps',  # 网站地图
+    'xadmin',
+    'crispy_forms',
     # 应用程序
     'blog',
     'config',
@@ -146,3 +148,7 @@ STATICFILES_DIRS = (
     # 如果加额外的路径寻找则在STATICFILES_DIR中设置（设置这个，因为项目共用bootstrap）
     os.path.join(BASE_DIR, "static"),
 )
+
+# xadmin 设置
+XADMIN_TITLE = 'lds管理后台'
+XADMIN_FOOTER_TITLE = 'power by lds'

@@ -13,7 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+import xadmin
+
 from django.urls import path
 from django.conf.urls import include, url
 from django.conf import settings
@@ -38,8 +39,7 @@ urlpatterns = [
     url(r'^author/(?P<owner_id>\d+)/$', AuthorView.as_view(), name='author'),
     url(r'^post/(?P<post_id>\d+).html$', PostDetailView.as_view(), name='post-detail'),
     url(r'^links/$', LinkListView.as_view(), name='links'),
-    path('super_admin/', admin.site.urls, name='super-admin'),
-    path('admin/', custom_site.urls, name='admin'),
+    url(r'^admin/', xadmin.site.urls, name='xadmin'),
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
 ]
