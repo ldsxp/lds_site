@@ -161,3 +161,6 @@ CKEDITOR_CONFIGS = {
     },
 }
 CKEDITOR_UPLOAD_PATH = "article_images"
+
+# 自定义储存后端
+DEFAULT_FILE_STORAGE = 'lds_site.storage.WatermarkStorage'
