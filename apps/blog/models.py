@@ -16,6 +16,7 @@ class Post(models.Model):
     )
     title = models.CharField(max_length=255, verbose_name="标题")
     desc = models.CharField(max_length=1024, blank=True, verbose_name="摘要")
+    is_md = models.BooleanField(default=False, verbose_name="markdown语法")
     category = models.ForeignKey('Category', verbose_name="分类", on_delete=models.DO_NOTHING)
     tags = models.ManyToManyField('Tag', verbose_name="标签")
 
@@ -42,7 +43,10 @@ class Post(models.Model):
         if self.owner_id is None and self.category.owner_id:
             self.owner_id = self.category.owner_id
 
-        self.content_html = mistune.markdown(self.content)
+        if self.is_md:
+            self.content_html = mistune.markdown(self.content)
+        else:
+            self.content_html = self.content
 
         return super().save(*args, **kwargs)
 
