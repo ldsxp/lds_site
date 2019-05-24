@@ -20,6 +20,7 @@ from django.conf import settings
 from django.contrib.sitemaps import views as sitemap_views
 
 from rest_framework.routers import DefaultRouter
+from rest_framework.documentation import include_docs_urls
 
 from blog.views import (
     IndexView, CategoryView, TagView,
@@ -49,6 +50,7 @@ urlpatterns = [
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
     url(r'^api/', include((router.urls, 'blog'))),
+    url(r'^api/docs/', include_docs_urls(title='typeidea apis')),
 ]
 
 if settings.DEBUG:
