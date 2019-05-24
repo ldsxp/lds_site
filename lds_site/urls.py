@@ -28,6 +28,7 @@ from blog.sitemap import PostSitemap
 from config.views import LinkListView
 from comment.views import CommentView
 from .custom_site import custom_site
+from blog.apis import post_list, PostList
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -42,6 +43,8 @@ urlpatterns = [
     path('admin/', custom_site.urls, name='admin'),
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
+    url(r'^api/post/', post_list, name='post-list'),
+    url(r'^api/post2/', PostList.as_view(), name='post-list'),
 ]
 
 if settings.DEBUG:
