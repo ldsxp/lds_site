@@ -3,7 +3,7 @@ from rest_framework import serializers, pagination
 from .models import Post, Category
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.HyperlinkedModelSerializer):
     # SlugRelatedField 配置外键
     category = serializers.SlugRelatedField(
         read_only=True,
@@ -20,9 +20,15 @@ class PostSerializer(serializers.ModelSerializer):
     )
     created_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
+    # 这种方法和extra_kwargs属性添加url一样
+    # url = serializers.HyperlinkedIdentityField(view_name='blog:api-post-detail')
+
     class Meta:
         model = Post
-        fields = ['id', 'title', 'category', 'tags', 'owner', 'created_time']
+        fields = ['url', 'id', 'title', 'category', 'tags', 'owner', 'created_time']
+        extra_kwargs = {
+            'url': {'view_name': 'blog:api-post-detail'}
+        }
 
 
 class PostDetailSerializer(PostSerializer):
