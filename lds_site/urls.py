@@ -31,10 +31,11 @@ from blog.sitemap import PostSitemap
 from config.views import LinkListView
 from comment.views import CommentView
 from .custom_site import custom_site
-from blog.apis import PostViewSet
+from blog.apis import PostViewSet, CategoryViewSet
 
 router = DefaultRouter()
 router.register(r'post', PostViewSet, base_name='api-post')
+router.register(r'category', CategoryViewSet, base_name='api-category'),
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -50,7 +51,7 @@ urlpatterns = [
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
     url(r'^api/', include((router.urls, 'blog'))),
-    url(r'^api/docs/', include_docs_urls(title='typeidea apis')),
+    url(r'^api/docs/', include_docs_urls(title='lds 博客 apis')),
 ]
 
 if settings.DEBUG:

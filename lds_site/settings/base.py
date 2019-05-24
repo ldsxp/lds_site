@@ -142,3 +142,8 @@ STATICFILES_DIRS = (
     # 如果加额外的路径寻找则在STATICFILES_DIR中设置（设置这个，因为项目共用bootstrap）
     os.path.join(BASE_DIR, "static"),
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
+}
