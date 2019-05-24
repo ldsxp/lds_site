@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from .models import Post, Category
 from .serializers import (
     PostSerializer, PostDetailSerializer,
-    CategorySerializer,
+    CategorySerializer, CategoryDetailSerializer
 )
 
 
@@ -15,7 +15,7 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         # 设置 serializer_class，不同接口使用不同 Serializer
         self.serializer_class = PostDetailSerializer
-        return super(PostViewSet, self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
     def filter_queryset(self, queryset):
         category_id = self.request.query_params.get('category')
@@ -27,3 +27,7 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.filter(status=Category.STATUS_NORMAL)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CategoryDetailSerializer
+        return super().retrieve(request, *args, **kwargs)
