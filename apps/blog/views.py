@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
+# from silk.profiling.profiler import silk_profile
 
 # from comment.forms import CommentForm
 # from comment.models import Comment
@@ -14,6 +15,7 @@ from .models import Post, Category, Tag
 
 
 class CommonViewMixin:
+    # @silk_profile(name='get_category_context')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({

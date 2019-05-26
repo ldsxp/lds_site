@@ -9,10 +9,12 @@ INSTALLED_APPS += [
     'debug_toolbar',
     'pympler',
     'debug_toolbar_line_profiler',
+    # 'silk',
 ]
 
 MIDDLEWARE += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'silk.middleware.SilkyMiddleware',
 ]
 
 # 允许访问debug_toolbar的IP地址
