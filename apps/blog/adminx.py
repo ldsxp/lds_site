@@ -39,6 +39,8 @@ class TagAdmin(BaseOwnerAdmin):
     list_display = ('name', 'status', 'created_time')
     fields = ('name', 'status')
 
+    list_editable = ['name', 'status']
+
 
 class CategoryOwnerFilter(RelatedFieldListFilter):
     """ 自定义过滤器只展示当前用户分类 """
@@ -67,6 +69,8 @@ class PostAdmin(BaseOwnerAdmin):
 
     list_filter = ['category', ]
     search_fields = ['title', 'category__name', 'owner__username']
+
+    list_editable = ['title', 'content']
 
     actions_on_top = True
     actions_on_bottom = True
