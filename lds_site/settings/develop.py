@@ -40,9 +40,9 @@ DEBUG_TOOLBAR_PANELS = [
     # 'djdt_flamegraph.FlamegraphPanel',
     # 'debug_toolbar.panels.timer.TimerPanel',
     # pympler 内存占用分析
-    'pympler.panels.MemoryPanel',
+    # 'pympler.panels.MemoryPanel',
     # django-debug-toolbar-line-profiler 行级性能分析插件
-    'debug_toolbar_line_profiler.panel.ProfilingPanel',
+    # 'debug_toolbar_line_profiler.panel.ProfilingPanel',
 ]
 
 LOGGING = {
