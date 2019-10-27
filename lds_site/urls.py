@@ -38,7 +38,9 @@ router.register(r'post', PostViewSet, base_name='api-post')
 router.register(r'category', CategoryViewSet, base_name='api-category'),
 
 urlpatterns = [
-    url(r'^$', IndexView.as_view(), name='index'),
+    path('', IndexView.as_view(), name='index'),
+    # path('', custom_site.urls, name='index'),
+    path('blog/', IndexView.as_view(), name='blog'),
     url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
     url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='tag-list'),
     url(r'^search/$', SearchView.as_view(), name='search'),
