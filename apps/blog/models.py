@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class ExcludeDeleteManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().exclude(status=1)
+
+
 class Post(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -28,6 +33,11 @@ class Post(models.Model):
 
     pv = models.PositiveIntegerField(default=1)
     uv = models.PositiveIntegerField(default=1)
+
+    # 默认的管理器
+    objects = models.Manager()
+    # 专门查询不包括删除内容的管理器
+    exclude_delete_objects = ExcludeDeleteManager()
 
     def status_show(self):
         return '当前状态:%s' % self.status
