@@ -1,17 +1,30 @@
 @ECHO OFF&PUSHD %~DP0 &TITLE 网站管理工具
 mode con cols=150 lines=30
 
+set version=1.1
+
+set username=lds
+set email=85176878@qq.com
 set scripts=D:\Envs\lds_site\Scripts
 set python=%scripts%\python.exe
 
+if not exist %scripts% (
+@ echo lds_tool %version% 版
+@ echo 虚拟环境的路径不存在，修正文件路径（%scripts%）或新建虚拟环境。
+@ echo.
+echo 将退出命令行工具！！！
+@ echo.
+pause
+exit
+
+)
 
 SetLocal EnableDelayedExpansion
 :Menu
 Cls
-
-
+@ echo.   lds_tool %version%
 @ echo.
-@ echo.   选项   菜 单 
+@ echo.   选项   菜 单
 @ echo.
 @ echo.   [r]    启动服务器
 @ echo.
@@ -27,6 +40,8 @@ Cls
 @ echo. 
 @ echo.   [i]    安装 requirements.txt
 @ echo. 
+@ echo.   [d]    安装 requirements_dev.txt
+@ echo.
 @ echo.   输入其他任意内容退出...
 @ echo.
 @ echo. 
@@ -40,6 +55,7 @@ if /i "%xj%"=="2" Goto check_db
 if /i "%xj%"=="3" Goto create_db
 if /i "%xj%"=="e" Goto export_requirements
 if /i "%xj%"=="i" Goto import_requirements
+if /i "%xj%"=="d" Goto import_requirements_dev
 @ echo.
 cls
 exit
@@ -70,8 +86,8 @@ cls
 @ echo.
 ECHO 创建管理员
 %python% manage.py migrate
-ECHO 注：我直接输入了用户名和邮箱，如果您正在使用这个脚本，请按需修改！
-%python% manage.py createsuperuser --username=lds --email=85176878@qq.com
+ECHO 注：我直接输入了用户名（%username%）和邮箱（%email%），如果您正在使用这个脚本，请按需修改！
+%python% manage.py createsuperuser --username=%username% --email=%email%
 @ echo.
 ECHO 创建管理员完成
 pause
@@ -98,6 +114,7 @@ pause
 goto menu
 
 :export_requirements
+@ echo. %scripts%\pip freeze > requirements.txt
 %scripts%\pip freeze > requirements.txt
 @ ECHO.
 ECHO 导出 requirements.txt 完成
@@ -108,9 +125,21 @@ cls
 goto menu
 
 :import_requirements
+@ echo. %scripts%\pip install -i https://pypi.douban.com/simple/ -r requirements.txt
 %scripts%\pip install -i https://pypi.douban.com/simple/ -r requirements.txt
 @ ECHO.
 ECHO 安装 requirements.txt 完成
+@ ECHO.
+@ ECHO.
+pause
+cls
+goto menu
+
+
+:import_requirements_dev
+%scripts%\pip install -i https://pypi.douban.com/simple/ -r requirements_dev.txt
+@ ECHO.
+ECHO 安装 requirements_dev.txt 完成
 @ ECHO.
 @ ECHO.
 pause
