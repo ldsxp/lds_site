@@ -3,6 +3,8 @@ import mistune
 from django.utils.functional import cached_property
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.fields import DateTimeField
+from django.db.models.fields.related import ManyToManyField
 
 
 class ExcludeDeleteManager(models.Manager):
@@ -97,6 +99,30 @@ class Post(models.Model):
     @classmethod
     def hot_posts(cls):
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')
+
+    def to_dict(self, fields=None, exclude=None):
+        """
+        转换模型为字典数据
+        """
+        data = {}
+        for f in self._meta.concrete_fields + self._meta.many_to_many:
+            value = f.value_from_object(self)
+
+            if fields and f.name not in fields:
+                continue
+
+            if exclude and f.name in exclude:
+                continue
+
+            if isinstance(f, ManyToManyField):
+                value = [i.id for i in value] if self.pk else None
+
+            if isinstance(f, DateTimeField):
+                value = value.strftime('%Y-%m-%d %H:%M:%S') if value else None
+
+            data[f.name] = value
+
+        return data
 
 
 class Category(models.Model):
