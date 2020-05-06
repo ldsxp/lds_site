@@ -8,7 +8,7 @@ DEBUG = True
 INSTALLED_APPS += [
     'debug_toolbar',
     'pympler',
-    'debug_toolbar_line_profiler',
+    # 'debug_toolbar_line_profiler',
     # 'silk',
 ]
 

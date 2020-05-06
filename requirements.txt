@@ -2,7 +2,7 @@ coreapi==2.3.3
 # https://www.djangoproject.com/
 django==2.2.12
 django-debug-toolbar==2.2
-django-debug-toolbar-line-profiler==0.6.1
+# django-debug-toolbar-line-profiler==0.6.1
 djangorestframework==3.11.0
 Markdown==3.2.1
 mistune==0.8.4
