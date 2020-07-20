@@ -20,6 +20,9 @@
 <div class="container head">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">首页</a>
+        {% if request.user.is_superuser %}
+            <a class="navbar-brand" href="admin/">后台</a>
+        {% endif %}
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 {% for cate in navs %}
