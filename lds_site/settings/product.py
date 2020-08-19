@@ -61,9 +61,10 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER  # 设置发件人
 
 '''
 
+# https://docs.djangoproject.com/en/3.1/topics/logging/
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,  # False 禁用已经存在的logger实例
     'formatters': {  # 配置打印日志格式
         'standard': {
             'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'}
