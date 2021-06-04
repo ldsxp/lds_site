@@ -61,13 +61,22 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER  # 设置发件人
 
 '''
 
-# https://docs.djangoproject.com/en/3.1/topics/logging/
+# 日志配置 https://docs.djangoproject.com/en/3.1/topics/logging/
+# 创建日志的路径
+LOG_PATH = os.path.join(BASE_DIR, 'logs')
+# 如果地址不存在，则自动创建log文件夹
+if not os.path.exists(LOG_PATH):
+    os.mkdir(LOG_PATH)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # False 禁用已经存在的logger实例
     'formatters': {  # 配置打印日志格式
         'standard': {
-            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'}
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s.%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'},
+        'standard2': {
+            'format': '[%(asctime)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'},
+        'simple': {  # 简单格式
+            'format': '%(levelname)s %(message)s'},
     },
     'filters': {  # 过滤器
         'require_debug_false': {
@@ -85,17 +94,37 @@ LOGGING = {
             'filters': ['require_debug_false'],  # 仅当 DEBUG = False 时才发送邮件
             'include_html': True,
         },
-        'debug': {  # 记录到日志文件(需要创建对应的目录，否则会出错)
+        'default': {  # 默认记录所有日志(需要创建对应的目录，否则会出错)
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, "logs", 'django_debug.log'),  # 日志输出文件
+            'filename': os.path.join(LOG_PATH, 'error-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),  # 日志输出文件
             'maxBytes': 1024 * 1024 * 5,  # 文件大小
             'backupCount': 5,  # 备份份数
             'formatter': 'standard',  # 使用哪种 formatters 日志格式
+            'encoding': 'utf-8',  # 设置默认编码，否则打印出来汉字乱码
+        },
+        'error': {  # 输出错误日志
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH, 'error-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 备份数
+            'formatter': 'standard',  # 输出格式
+            'encoding': 'utf-8',  # 设置默认编码
+        },
+        'info': {  # 输出info日志
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH, 'info-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'standard',
+            'encoding': 'utf-8',  # 设置默认编码
         },
         'console': {  # 输出到控制台
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            # 'filters': ['require_debug_true'],
             'formatter': 'standard',
         },
     },
@@ -105,16 +134,21 @@ LOGGING = {
         #     'level': 'DEBUG',
         #     'propagate': False
         # },
-        'django': {
-            'handlers': ['console'],
+        'django': {  # 类型 为 django 处理所有类型的日志， 默认调用
+            'handlers': ['default', 'console'],
             'level': 'INFO',
             'propagate': True,
         },
         'django.request': {
-            'handlers': ['debug', 'mail_admins', 'console'],
+            'handlers': ['default', 'error', 'mail_admins', 'console'],
             'level': 'ERROR',
             'propagate': True,
         },
+        # 'log': {  # log 调用时需要当作参数传入
+        #     'handlers': ['error', 'info', 'console', 'default'],
+        #     'level': 'INFO',
+        #     'propagate': True
+        # },
         # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
         'django.security.DisallowedHost': {
             'handlers': ['null'],
