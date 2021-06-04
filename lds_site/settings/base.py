@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import sys
+from datetime import datetime, timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 因为我们把设置放在了目录中
@@ -142,6 +143,102 @@ STATICFILES_DIRS = (
     # 如果加额外的路径寻找则在STATICFILES_DIR中设置（设置这个，因为项目共用bootstrap）
     os.path.join(BASE_DIR, "static"),
 )
+
+# 日志配置 https://docs.djangoproject.com/en/3.1/topics/logging/
+# 创建日志的路径
+LOG_PATH = os.path.join(BASE_DIR, 'logs')
+# 如果地址不存在，则自动创建log文件夹
+if not os.path.exists(LOG_PATH):
+    os.mkdir(LOG_PATH)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # False 禁用已经存在的logger实例
+    'formatters': {  # 配置打印日志格式
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s.%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'},
+        'standard2': {
+            'format': '[%(asctime)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'},
+        'simple': {  # 简单格式
+            'format': '%(levelname)s %(message)s'},
+    },
+    'filters': {  # 过滤器
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'handlers': {  # 定义具体处理日志的方式
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'mail_admins': {  # 发送邮件通知管理员
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],  # 仅当 DEBUG = False 时才发送邮件
+            'include_html': True,
+        },
+        'default': {  # 默认记录所有日志(需要创建对应的目录，否则会出错)
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH, 'error-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),  # 日志输出文件
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 备份份数
+            'formatter': 'standard',  # 使用哪种 formatters 日志格式
+            'encoding': 'utf-8',  # 设置默认编码，否则打印出来汉字乱码
+        },
+        'error': {  # 输出错误日志
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH, 'error-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),
+            'maxBytes': 1024 * 1024 * 5,  # 文件大小
+            'backupCount': 5,  # 备份数
+            'formatter': 'standard',  # 输出格式
+            'encoding': 'utf-8',  # 设置默认编码
+        },
+        'info': {  # 输出info日志
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_PATH, 'info-{}.log'.format(datetime.now().strftime('%Y-%m-%d'))),
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'standard',
+            'encoding': 'utf-8',  # 设置默认编码
+        },
+        'console': {  # 输出到控制台
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            # 'filters': ['require_debug_true'],
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {  # 用来配置用那种handlers来处理日志，比如你同时需要输出日志到文件、控制台。
+        # 'django': { # loggers类型为"django"这将处理所有类型日志。
+        #     'handlers': ['console'],
+        #     'level': 'DEBUG',
+        #     'propagate': False
+        # },
+        'django': {  # 类型 为 django 处理所有类型的日志， 默认调用
+            'handlers': ['default', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['default', 'error', 'mail_admins', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        # 'log': {  # log 调用时需要当作参数传入
+        #     'handlers': ['error', 'info', 'console', 'default'],
+        #     'level': 'INFO',
+        #     'propagate': True
+        # },
+        # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
